@@ -1,0 +1,35 @@
+{
+  "name": "junkwallet-finder",
+  "version": "1.0.0",
+  "description": "Tool to find Junkcoin private keys from mnemonic phrases",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "install-deps": "npm install express body-parser bip39 bitcoinjs-lib tiny-secp256k1 bip32 ecpair"
+  },
+  "dependencies": {
+    "bip32": "^3.0.1",
+    "bip39": "^3.0.4",
+    "bitcoinjs-lib": "^6.1.0",
+    "body-parser": "^1.20.2",
+    "ecpair": "^2.1.0",
+    "express": "^4.18.2",
+    "tiny-secp256k1": "^2.2.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/junkwallet-finder"
+  },
+  "keywords": [
+    "junkcoin",
+    "wallet",
+    "cryptocurrency",
+    "private-key",
+    "mnemonic"
+  ],
+  "author": "",
+  "license": "MIT"
+}

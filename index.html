@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Junkcoin Wallet Finder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: none;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Junkcoin Wallet Finder</h1>
+        <p>Enter your mnemonic phrase and target address to find the private key.</p>
+        
+        <div class="form-group">
+            <label for="mnemonic">Mnemonic Phrase:</label>
+            <input type="text" id="mnemonic" placeholder="Enter your 12 or 24 word mnemonic phrase">
+        </div>
+        
+        <div class="form-group">
+            <label for="address">Target Address:</label>
+            <input type="text" id="address" placeholder="Enter the Junkcoin address starting with '7'">
+        </div>
+        
+        <button onclick="findKey()">Find Private Key</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function findKey() {
+            const mnemonic = document.getElementById('mnemonic').value;
+            const address = document.getElementById('address').value;
+            const resultDiv = document.getElementById('result');
+            
+            if (!mnemonic || !address) {
+                showError('Please enter both mnemonic phrase and target address');
+                return;
+            }
+
+            if (!address.startsWith('7')) {
+                showError('Invalid Junkcoin address. Address must start with "7"');
+                return;
+            }
+
+            try {
+                const response = await fetch('/find-key', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        mnemonic: mnemonic,
+                        targetAddress: address
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.error) {
+                    showError(data.error);
+                    return;
+                }
+
+                if (!data.found) {
+                    showError(data.message || 'Address not found');
+                    return;
+                }
+
+                resultDiv.innerHTML = `
+                    <h3>Result:</h3>
+                    <p><strong>Found:</strong> Yes</p>
+                    <p><strong>Private Key (WIF):</strong> ${data.privateKey}</p>
+                    <p><strong>Derivation Path:</strong> ${data.path}</p>
+                    <p><strong>Address Type:</strong> ${data.type}</p>
+                    <p><strong>Address:</strong> ${data.address}</p>
+                `;
+                resultDiv.style.display = 'block';
+                resultDiv.style.backgroundColor = '#dff0d8';
+                resultDiv.style.color = '#3c763d';
+                resultDiv.style.border = '1px solid #d6e9c6';
+
+            } catch (error) {
+                showError('An error occurred while processing your request');
+                console.error('Error:', error);
+            }
+        }
+
+        function showError(message) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<p class="error">${message}</p>`;
+            resultDiv.style.display = 'block';
+            resultDiv.style.backgroundColor = '#f2dede';
+            resultDiv.style.color = '#a94442';
+            resultDiv.style.border = '1px solid #ebccd1';
+        }
+    </script>
+</body>
+</html>
