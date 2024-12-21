@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://github.com/Junkcoin-Foundation/junkcoin-docs/blob/main/assets/logos/logo-junkcoin-horizontal-2500px.png" alt="Junkcoin Logo" width="350"/>
+</p>
+
 # Junkcoin Wallet Finder
 
 A tool to find Junkcoin private keys from mnemonic phrases. Supports multiple derivation paths and generates addresses starting with '7' and private keys starting with 'N'.
